@@ -343,12 +343,10 @@ export const isAllowed = () => {
                 next()
             } else {
 
-                // Check exact match first, then fall back to pattern match
-                if (!_.get(API_LIST.URL, REQ_URL)) {
-                    const matchedPattern = matchUrlPattern(REQ_URL)
-                    if (matchedPattern) {
-                        REQ_URL = matchedPattern
-                    }
+                // Pattern match for URL (uses pre-compiled regexes)
+                const matchedPattern = matchUrlPattern(REQ_URL)
+                if (matchedPattern) {
+                    REQ_URL = matchedPattern
                 }
                 // Is API whitelisted ?
                 if (_.get(API_LIST.URL, REQ_URL)) {
@@ -392,12 +390,10 @@ const redirectToLogin = (req: Request) => {
 
 const validateAPI = (req: Request, res: Response, next: NextFunction) => {
     let REQ_URL_ORIGINAL = req.path
-    // Check exact match first, then fall back to pattern match
-    if (!_.get(API_LIST.URL, REQ_URL_ORIGINAL)) {
-        const matched = matchUrlPattern(REQ_URL_ORIGINAL)
-        if (matched) {
-            REQ_URL_ORIGINAL = matched
-        }
+    // Pattern match for URL (uses pre-compiled regexes)
+    const matched = matchUrlPattern(REQ_URL_ORIGINAL)
+    if (matched) {
+        REQ_URL_ORIGINAL = matched
     }
     if (_.get(API_LIST.URL, REQ_URL_ORIGINAL)) {
         next()
